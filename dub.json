@@ -1,0 +1,9 @@
+{
+	"authors": [
+		"Susan"
+	],
+	"copyright": "Copyright © 2021, Susan",
+	"description": "small hash and rng utility library",
+	"license": "AGPL-3.0 or later",
+	"name": "hash"
+}
