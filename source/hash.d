@@ -1,5 +1,6 @@
 module hash.hash;
 
+/// hash an arbitray amount of structs, homogenous or otherwise
 uint hash(Arg...)(in Arg a) pure @safe @nogc
 {
 	uint result;
@@ -24,9 +25,9 @@ uint hash(Arg...)(in Arg a) pure @safe @nogc
 
 unittest
 {
-	auto res1 = hash(1);
-	auto res2 = hash(2);
-	auto res3 = hash(1, 2);
+	immutable res1 = hash(1);
+	immutable res2 = hash(2);
+	immutable res3 = hash(1, 2);
 
 	struct S
 	{
@@ -35,10 +36,9 @@ unittest
 	}
 
 	S s;
-	auto res4 = hash(1, 2, s);
+	immutable res4 = hash(1, 2, s);
 
 	S s2;
-
 	assert(hash(s) == hash(s2));
 
 	assert(res1 != res2); //is there a way to dry this?
