@@ -1,7 +1,7 @@
 module hash.splitmix;
 
 /// implementation of splitMix64 random number generator
-ulong splitMix64(in ulong seed, in long offset) @safe pure @nogc
+ulong splitMix64(in ulong seed, in long offset) @safe pure @nogc nothrow
 {
 	// using constants as described by Andrew Clifton
 	// in his 2020 virtual Roguelike Celebration talk

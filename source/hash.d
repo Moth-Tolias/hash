@@ -1,52 +1,36 @@
 module hash.hash;
 
-/// hash an arbitray amount of structs, homogenous or otherwise
-uint hash(Arg...)(in Arg a) pure @safe @nogc
+/// hash an arbitrary amount of values
+ulong hash(in ulong[] values...) pure @safe @nogc nothrow
 {
-	uint result;
+	ulong result;
 
-	foreach(t; a)
+	foreach(ulong value; values)
 	{
-		uint hash;
-		typeof(t)[1] hashable = t;
-
-		import std.digest.crc : crc32Of;
-		auto crc = crc32Of(hashable); // caution: does not work on classes!
-		foreach(i, ubyte u; crc)
-		{
-			hash |= u << (i * (ubyte.sizeof * 8));
-		}
-
-		result ^= hash; //xor is fine for our purposes
+		import hash.splitmix;
+		immutable temp = splitMix64(value, 0);
+		result ^= temp; //xor is fine for our purposes
 	}
 
 	return result;
 }
 
-unittest
+@safe @nogc nothrow unittest
 {
 	immutable res1 = hash(1);
-	immutable res2 = hash(2);
+	immutable res2 = hash(2, -2);
 	immutable res3 = hash(1, 2);
-
-	struct S
-	{
-		int x;
-		int y;
-	}
-
-	S s;
-	immutable res4 = hash(1, 2, s);
-
-	S s2;
-	assert(hash(s) == hash(s2));
 
 	assert(res1 != res2); //is there a way to dry this?
 	assert(res1 != res3);
-	assert(res1 != res4);
 
 	assert(res2 != res3);
-	assert(res2 != res4);
+}
 
-	assert(res3 != res4);
+unittest
+{
+	import std.stdio : writeln;
+	writeln("+1: ", hash(1));
+	writeln("-1: ", hash(-1));
+	writeln("1, 2: ", hash(1, 2, 3));
 }
